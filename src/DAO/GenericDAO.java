@@ -14,7 +14,7 @@ import java.util.List;
  * @author usuario
  */
 public interface GenericDAO <T extends Serializable> {
-    
+//probando git que se io    
   void Guardar(T t);
   void Actualizar(T t);
   List <T> Buscar();
