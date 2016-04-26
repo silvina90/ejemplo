@@ -1,0 +1,146 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ejemplo;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+/**
+ *
+ * @author usuario
+ */
+public class Ejemplo {
+    private static Object sessionFactory;
+    private Transaction tx;
+    private Session sesion;
+     
+    
+    private void manejaExcepcion(HibernateException he) throws HibernateException {
+    tx.rollback();
+    throw new HibernateException("Ocurrió un error en la capa de acceso a datos", he);
+    }
+    
+    private void iniciaOperacion() throws HibernateException{
+        sesion = hibernate.getSessionFactory().openSession();
+        tx = sesion.beginTransaction();
+     }
+    private void guardarPersona(Persona p){
+    long id = 0;  
+    try{ 
+        iniciaOperacion(); 
+        sesion.save(p); 
+        sesion.getTransaction().commit();
+        if (sesion != null)
+	  sesion.close();
+    }catch(HibernateException he){ 
+        manejaExcepcion(he);
+        throw he; 
+       
+    }
+    }
+    private void guardarAuto (Auto p){
+    long id = 0;  
+    try{ 
+        iniciaOperacion(); 
+        sesion.save(p); 
+        sesion.getTransaction().commit();
+        if (sesion != null)
+	  sesion.close();
+    }catch(HibernateException he){ 
+        manejaExcepcion(he);
+        throw he; 
+       
+    }
+    }
+    
+
+    private void UpDate (Persona p){
+    try{ 
+        iniciaOperacion();
+        Persona p2=(Persona)sesion.get(Persona.class,1);
+        System.out.println(p2.getId());
+        System.out.println(p2.getNombre());
+        System.out.println(p2.getDireccion());
+        p2.setNombre(p.getNombre());
+        p2.setDireccion(p.getDireccion());
+        sesion.update(p2);
+        sesion.getTransaction().commit();
+         if (sesion != null)
+                sesion.close();
+    }catch(HibernateException he){ 
+        manejaExcepcion(he);
+        throw he; 
+       }
+    }
+    private void Leer (){
+       try{  
+       iniciaOperacion();
+       Query query = sesion.createQuery("FROM Persona");
+       List<Persona> personas = query.list();
+       for (Persona pe : personas) {
+            System.out.println(pe.getNombre()+"--" +pe.getDireccion());
+          }
+       if (sesion != null)
+                sesion.close();
+       }catch(HibernateException he){ 
+        manejaExcepcion(he);
+        throw he; 
+       }
+    }
+    private void Delete (){
+        try{  
+           iniciaOperacion();
+           String hql = "delete from Persona P where P.Id = :id_person ";
+           Query query = sesion.createQuery(hql);
+           query.setParameter("id_person", 2);
+           query.executeUpdate();
+           sesion.getTransaction().commit();
+           if (sesion != null)
+                    sesion.close();
+           }catch(HibernateException he){ 
+            manejaExcepcion(he);
+            throw he; 
+        }
+    }
+    
+    public static void main(String[] args) {
+ 
+        Ejemplo e= new Ejemplo();
+        Persona p= new Persona();
+        Set<Auto> autos = new HashSet<Auto>();  
+        Auto a= new Auto();
+        Auto a1= new Auto();
+        Auto a2= new Auto();
+    /* ***INSERTAR**** */  
+        p.setNombre("JAVIER LUCERO");
+        p.setDireccion("CHICLANA 80");
+        a.setMarca("FORD");
+        a.setPatente("XNH 586");
+        a1.setMarca("FIAT");
+        a1.setPatente("FMI 866");
+        a2.setMarca("CHEVROLET");
+        a2.setPatente("FPN 571");
+        //e.guardarAuto(a);
+        autos.add(a);
+        autos.add(a1);
+        autos.add(a2);
+  //      p.getAutos().add(a);
+        p.getAutos().addAll(autos);
+        e.guardarPersona(p);
+        System.out.println("Inserted AUTO details");
+      //leer
+        
+     }
+	 select * from persona p   inner join auto a on p.id_person = a.id_person;
+     
+     
+     
+     } 

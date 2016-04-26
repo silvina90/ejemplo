@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="ejemplo.Empleado" table="empleado" discriminator-value="EMPLEADO">
+   <id name="id">
+	<generator class="identity"/>	
+   </id>
+   <discriminator column="clase" type="string" />
+      <property name="dni"></property>
+      <property name="nombre"></property>
+      <property name="direccion"></property>
+      <property name="telefono"></property>
+      <subclass name="ejemplo.Tecnico"
+	 discriminator-value="TECNICO">
+	   <property name="aniosExp"></property>
+     </subclass>
+     <subclass name="ejemplo.Desarrollador"
+	 discriminator-value="DESARROLADOR">
+	   <property name="lenguajeExp"></property>
+     </subclass>
+  </class>  
+</hibernate-mapping>
